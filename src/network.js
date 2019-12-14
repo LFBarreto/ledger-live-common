@@ -11,13 +11,19 @@ export const setWebSocketImplementation = (wsimpl: *) => {
   WebSocket = wsimpl;
 };
 
-export const createWebSocket = (url: string) => {
+export const getWebSocketCtor = () => {
   if (!WebSocket) {
     throw new Error(
       "live-common: no WebSocket implementation is available. use setWebSocketImplementation"
     );
   }
-  return new WebSocket(url);
+  return WebSocket;
+};
+
+export const createWebSocket = (url: string) => {
+  console.warn("createWebSocket deprecated");
+  const Ctor = getWebSocketCtor();
+  return new Ctor(url);
 };
 
 export default (...args: *) => {
