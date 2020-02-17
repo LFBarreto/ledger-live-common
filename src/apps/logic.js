@@ -6,10 +6,10 @@ import { ManagerDeviceLockedError } from "@ledgerhq/errors";
 import type { App } from "../types/manager";
 import type {
   AppOp,
-  State,
-  Action,
-  ListAppsResult,
-  AppsDistribution
+    State,
+    Action,
+    ListAppsResult,
+    AppsDistribution
 } from "./types";
 import { findCryptoCurrency } from "../data/cryptocurrencies";
 
@@ -394,7 +394,11 @@ export const isOutOfMemoryState = (state: State): boolean => {
 
 export const updateAllProgress = (state: State): number => {
   const total = state.updateAllQueue.length;
-  const current = state.uninstallQueue.length + state.installQueue.length;
+  /**
+   * each update is composed of an uninstall and an install
+   * each action has a weight of .5
+   * */
+  const current = (state.uninstallQueue.length + state.installQueue.length) / 2;
   if (total === 0 || current === 0) return 1;
   return (total - current) / total;
 };
