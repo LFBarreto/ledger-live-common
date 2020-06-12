@@ -130,7 +130,7 @@ const getSendTransactionStatus = async (a, t) => {
 
   let amount = t.amount;
 
-  if (amount.lte(0) && t.useAllAmount !== true) {
+  if (amount.lte(0) && !t.useAllAmount) {
     errors.amount = new AmountRequired();
   }
 
@@ -141,9 +141,8 @@ const getSendTransactionStatus = async (a, t) => {
   let totalSpent = amount.plus(estimatedFees);
 
   if (
-    !errors.recipient &&
-    !errors.amount &&
-    totalSpent.gt(a.spendableBalance)
+    (amount.lte(0) && t.useAllAmount) ||
+    (!errors.recipient && !errors.amount && totalSpent.gt(a.spendableBalance))
   ) {
     errors.amount = new NotEnoughBalance();
   }
